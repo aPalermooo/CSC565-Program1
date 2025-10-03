@@ -1,6 +1,12 @@
 from dataclasses import dataclass
 
 
+
+OPTIONS = {"Exit": None,
+               "Distance": ("Kilometers", "Miles"),
+               "Weight": ("Kilograms", "Pounds"),
+               "Temperature": ("Celsius", "Fahrenheit")}
+
 @dataclass
 class Message:
     """

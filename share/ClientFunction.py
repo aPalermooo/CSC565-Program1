@@ -1,14 +1,9 @@
 from decimal import InvalidOperation
-from os import WCONTINUED
 
 from share.Message import Message
+from share.Message import OPTIONS
 
 DIVIDER = '\n' + ('-' * 30) + '\n'
-
-OPTIONS = {"Exit": None,
-               "Distance": ("Kilometers", "Miles"),
-               "Weight": ("Kilograms", "Pounds"),
-               "Temperature": ("Celsius", "Fahrenheit")}
 
 def create_message(connection_type : str) -> Message:
     """
@@ -24,7 +19,10 @@ def create_message(connection_type : str) -> Message:
               f"\nplease try again...\n{DIVIDER}")
 
     def prompt_type() -> int:
-
+        """
+        Prompts user for units to be used in the conversion
+        :return: an int value that represents the conversion
+        """
         user_input = 0 #set in scope outside loop
 
         while True:  # while user input is invalid
