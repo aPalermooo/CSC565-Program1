@@ -16,7 +16,6 @@ class Message:
 
 
     Message Type is described as follows:
-    0. Response
     1. Request Distance
     2. Request Weight
     3. Request Temperature
