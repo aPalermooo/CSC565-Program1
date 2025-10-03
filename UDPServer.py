@@ -3,6 +3,7 @@ from socket import *
 
 def main():
     server_port = 12000
+
     with socket(AF_INET, SOCK_DGRAM) as SERVER_SOCKET:
         SERVER_SOCKET.bind(('', server_port))
         print ("The server is ready to receive")
