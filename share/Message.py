@@ -16,4 +16,4 @@ class Message:
     3. Request Temperature
     """
     header: tuple[int,bool]
-    content: tuple(float)
+    content: tuple[float]
