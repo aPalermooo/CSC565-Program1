@@ -42,7 +42,7 @@ def create_message(connection_type : str) -> Message:
 
             if user_input == "":
                 break
-            elif re.fullmatch("\d{,3}\.\d{,3}\.\d{,3}\.\d{,3}",user_input):
+            elif re.fullmatch(r"\d{,3}\.\d{,3}\.\d{,3}\.\d{,3}",user_input):
                 server_location = user_input
                 break
         return server_location
@@ -233,6 +233,7 @@ def return_message(request : Message, response : Message) -> None:
 
 
 def main():
+    #TEST FUNCTIONALITY
     message = create_message("TEST")
     return_message(message, message)
 
