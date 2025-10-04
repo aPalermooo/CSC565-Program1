@@ -11,7 +11,13 @@ OPTIONS = {"Exit": None,
 class Message:
     """
     A data class that contains all information to be transferred between server and client
-    Header: (MessageType, isMetricToImperial)
+
+    header (MessageType, isMetricToImperial)
+
+    origin The IP address of the creator of the message
+
+    destination The IP address of the intended recipient of the message
+
     content: computed value
 
 
@@ -21,4 +27,6 @@ class Message:
     3. Request Temperature
     """
     header: tuple[int,bool]
+    origin: str
+    destination: str
     content: float

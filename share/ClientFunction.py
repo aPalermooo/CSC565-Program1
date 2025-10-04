@@ -1,9 +1,14 @@
+import re
+from socket import *
 from decimal import InvalidOperation
 
 from share.Message import Message
 from share.Message import OPTIONS
 
 DIVIDER = '\n' + ('-' * 30) + '\n'
+
+
+
 
 def create_message(connection_type : str) -> Message:
     """
@@ -23,6 +28,24 @@ def create_message(connection_type : str) -> Message:
         print(f"\nInput invalid ({reason})"
               f"\nYou entered: {inp}"
               f"\nplease try again...\n{DIVIDER}")
+
+    def prompt_server() -> str:
+        """
+        Prompts user for an IP address of a server
+        :return: An IP address of a server (accepts LocalHost)
+        """
+        server_location = "localhost" #default value
+        while True:
+            print("Input the IPv4 of the server (no input = \"localhost\"):")
+            print()
+            user_input = input("Input:")
+
+            if user_input == "":
+                break
+            elif re.fullmatch("\d{,3}\.\d{,3}\.\d{,3}\.\d{,3}",user_input):
+                server_location = user_input
+                break
+        return server_location
 
     def prompt_type() -> int:
         """
@@ -147,6 +170,23 @@ def create_message(connection_type : str) -> Message:
 
     print(f"Starting Client...\n\t(Connection Type: {connection_type}){DIVIDER}")
 
+    """SERVER LOCATION"""
+
+    destination = prompt_server()
+    print(DIVIDER)
+
+    """CLIENT LOCATION"""
+
+    origin = None
+
+    if destination == "localhost":
+        origin = "localhost"
+    else:
+        with (socket(AF_INET, SOCK_DGRAM) as s):
+            s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0]
+            origin = ip
+
     """CONVERSION TYPE"""
 
     message_type = prompt_type()
@@ -162,7 +202,10 @@ def create_message(connection_type : str) -> Message:
     value = prompt_value(message_type, is_metric)
     print(DIVIDER)
 
-    message = Message((message_type, is_metric), value)
+    message = Message(header=(message_type, is_metric),
+                      origin=origin,
+                      destination=destination,
+                      content=value)
 
     return message
 
