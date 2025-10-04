@@ -6,9 +6,8 @@
 # Class: CSC565 - Computer Networking
 # Assignment: Socket Programming Assignment 1
 ####################################
-
-from dataclasses import dataclass
-
+import json
+from dataclasses import dataclass, asdict
 
 # Maps MessageType to units it is converting between (Metric, Imperial)
 
@@ -40,3 +39,12 @@ class Message:
     origin: str
     destination: str
     content: float
+
+
+def main():
+    #Test Functionality
+    print("Hello World")
+
+
+if __name__ == "__main__":
+    main()

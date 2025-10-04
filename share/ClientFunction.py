@@ -52,11 +52,14 @@ def create_message(connection_type : str) -> Message:
             print()
             user_input = input("Input:")
 
-            if user_input == "":
+            if user_input == "" or user_input == "localhost":
                 break
             elif re.fullmatch(r"\d{,3}\.\d{,3}\.\d{,3}\.\d{,3}",user_input):
                 server_location = user_input
                 break
+
+            reject_input(user_input, "Not valid IPv4 address")
+
         return server_location
 
     def prompt_type() -> int:
