@@ -243,7 +243,15 @@ def return_message(request : Message, response : Message) -> None:
     current_units = options_list[0] if response.header[1] else options_list[1]
     future_units = options_list[1] if response.header[1] else options_list[0]
 
-    print(f"{request.content} {current_units} is equal to {response.content} {future_units}")
+    current_units = " " + current_units
+    future_units = " " + future_units
+
+    if response.header[0] == 3: #Temperature needs a modifier
+        current_units = "° " + current_units
+        future_units = "° " + future_units
+
+
+    print(f"{request.content:,}{current_units} is equal to {response.content:,.4f}{future_units}")
 
 
 
