@@ -16,6 +16,7 @@ def main():
         while True:
             connectionSocket, addr = server_socket.accept()
             message = pickle.loads(connectionSocket.recv(2048))
+            print(f"packet [{message}] received from: {addr}")
             modified_message = convert(message)
             connectionSocket.send(pickle.dumps(modified_message))
             connectionSocket.close()
