@@ -1,9 +1,8 @@
 ###################################
 # Name:         ClientFunction.py
 # Description:  Implementation of all the functionality expected of the client.
-#               Client is responsible for creating queries containing a measurement of distance, weight, or temperature and its units,
-#                   and the units they want the measurement to be converted into.
-#               Client also indicates the location of the server they are contacting
+#               Client is responsible for taking in user input of a quantity for Distance, Weight, or Temperature,
+#                   and submit information to the server for conversion
 #
 # Author: Xander Palermo <ajp2s@missouristate.edu>
 # Class: CSC565 - Computer Networking
@@ -11,23 +10,34 @@
 ####################################
 
 import re
-from socket import *
 from decimal import InvalidOperation
 
-from share.Message import Message
+from share.Message import Message, SUPPORTED_METRIC, SUPPORTED_IMPERIAL
 from share.Message import OPTIONS
 
 DIVIDER = '\n' + ('-' * 30) + '\n'
 
-def create_message(connection_type : str) -> Message | None:
-    """
-    Prompts user for all information required by server API
 
-    :param connection_type: Text string that indicates function of program
-    :return: Message Object containing user inputs
+
+
+
+def create_message(connection_type : str, args : list[str]):
+    """
+    Creates a message dataclass instance that contains all information required by the server API
+
+    Will validate each argument to ensure that the server can process data without exception
+
+    Args:
+            - destination: where the server processing the conversion is located (IPv4 or "localhost")
+            - value: The number that the user wants to be converted
+            - input: Abbreviation of the units the value is currently in
+            - output: Abbreviation of the units the user wants the value in
+    :param connection_type: Type of connection being established (for logging purposes)
+    :param args: A list of arguments passed on by the user (4 in total)
+    :return: Message object complete with
     """
 
-    def reject_input(inp : str, reason : str) -> None:
+    def reject_input(inp: str, reason: str) -> None:
         """
         Informs the user their provided input is invalid
         :param inp: The invalid input provided by the user
@@ -38,189 +48,90 @@ def create_message(connection_type : str) -> Message | None:
               f"\nYou entered: {inp}"
               f"\nplease try again...\n{DIVIDER}")
 
-    def prompt_server() -> str:
+    def validate_server(server_location : str) -> str | None:
         """
-        Prompts user for an IP address of a server
+        validates an IPv4 address of a server
+        :param server_location user provided server location
         :return: An IP address of a server (accepts LocalHost)
+
+        ..note
+            localhost is also an accepted IPv4 address
         """
-        server_location = "localhost" #default value
-        while True:
-            print("Input the IPv4 of the server (no input = \"localhost\"):")
-            print()
-            user_input = input("Input:")
 
-            if user_input == "" or user_input == "localhost":
-                break
-            elif re.fullmatch(r"\d{,3}\.\d{,3}\.\d{,3}\.\d{,3}",user_input):
-                server_location = user_input
-                break
+        if re.fullmatch(r"\d{,3}\.\d{,3}\.\d{,3}\.\d{,3}",server_location) or server_location == "localhost":
+            return server_location
 
-            reject_input(user_input, "Not valid IPv4 address")
+        reject_input(server_location, "Not valid IPv4 address")
+        raise RuntimeError()
 
-        return server_location
-
-    def prompt_type() -> int:
+    def validate_input(inp : str)-> list[int | bool]:
         """
-        Prompts user for units to be used in the conversion
-        :return: an int value that represents the conversion provided by the user
+        Validates unit of measurement
+        :param inp: an abbrivation of some unit of measurement
+        :return:
+                an int representation of that measurement.
+                a bool representation of if the units are in metric.
         """
-        user_input = 0 #set in scope outside loop
 
-        while True:  # while user input is invalid
+        if inp in SUPPORTED_METRIC:
+            return [SUPPORTED_METRIC.index(inp), True]
+        elif inp in SUPPORTED_IMPERIAL:
+            return [SUPPORTED_IMPERIAL.index(inp), False]
 
-            '''Prompt User'''
-            print("Input Number of Desired Conversation:\n")
-            for index, (key, value) in enumerate(OPTIONS.items()):
-                if index == 0:
-                    continue
-                print(f"{index:}. {key:<16}\t({value[0]:<9}\t <-->\t{value[1]:<11})")
-            print(f"0. Quit Program")
-            print()
+        reject_input(inp, "Not valid unit of measure")
+        raise RuntimeError()
 
-            '''Validate User Input'''
-            user_input_dirty = input("Input:")
-
-            if not user_input_dirty.isdigit() or user_input_dirty == "":
-                reject_input(user_input_dirty, "not a number")
-                continue
-
-            user_input = int(user_input_dirty)
-
-            if user_input not in range(len(OPTIONS)):
-                reject_input(user_input_dirty, "not in range")
-                continue
-
-            break #Input valid
-        return user_input
-
-    def prompt_direction(m_type : int) -> bool:
+    def validate_value(inp : str, is_temp : bool) -> float:
         """
-        Prompts user for what direction the conversion is going
-        :param m_type: The int representation of the type of conversion being done
-        :return: the user provided bool indicating if the inputted value will be in metric or not
+        Validates if the input provided by the user can be converted to a float
+
+        If the units are not in temperature, a negative number will be rejected
+        :param inp: the user provided value to be converted
+        :param is_temp: is the value in inp representative of a temperature
+        :return: a float representation of the input provided by the user
         """
-        options_list = list(OPTIONS.values())
-        options_list = options_list[m_type]
+        try:
+            user_input = float(inp)
+        except InvalidOperation:
+            reject_input(inp, "not a number")
+            exit(0)
 
-        user_input = False  # Bring to scope
-
-        while True:  # while user input invalid
-
-            '''Prompt User'''
-            print("Input Number of Desired Conversion:\n")
-            print(f"1. {options_list[0]} --> {options_list[1]}")
-            print(f"2. {options_list[1]} --> {options_list[0]}")
-            print(f"0. Quit Program\n")
-
-            user_input_dirty = input("Input: ")
-
-            '''Validate User Input'''
-            if not user_input_dirty.isdigit():
-                print(f"Input invalid (not a number)"
-                      f"\nYou entered: {user_input_dirty}"
-                      f"\nplease try again...{DIVIDER}")
-                continue
-
-            match user_input_dirty:
-                case "0":
-                    print("\nTerminating...\n")
-                    return None
-                case "1":
-                    user_input = True
-                    break
-                case "2":
-                    user_input = False
-                    break
-                case _: #Default:
-                    print(f"Input invalid (not in range)"
-                          f"\nYou entered: {user_input_dirty}"
-                          f"\nplease try again...{DIVIDER}")
-                    continue
-        return user_input
-
-    def prompt_value(m_type : int, metric : bool ) -> float:
-        """
-        Prompts the user to input a value that they want the units to be changed
-        :param m_type: The int representation of the type of conversion being done
-        :param metric: the bool representation of if the provided value will be in metric
-        :return: A user provided value that they want the units converted
-        """
-        user_input = 0 # set in scope
-        while True:
-            options_list = list(OPTIONS.values())
-            options_list = options_list[m_type]
-
-            current_units = options_list[0] if metric else options_list[1]
-            future_units = options_list[1] if metric else options_list[0]
-
-            print(f"Input Number to be converted from {current_units} to {future_units}")
-            print(f"\t (Input e to exit Program)", end="\t")
-
-            if m_type == 3: #is_Temperature
-                print("(Can be negative)",end="\t")
-
-            print()
-
-            user_input_dirty = input("Input:")
-
-            if user_input_dirty == "e":
-                print("Terminating...")
-                return None
-
-            try:
-                user_input = float(user_input_dirty)
-            except InvalidOperation:
-                reject_input(user_input_dirty, "not a number")
-                continue
-
-            if m_type != 3 and user_input <= 0:
-                reject_input(user_input_dirty, "non-integer number for this type of conversion")
-                continue
-
-            break #input valid
+        if not is_temp and user_input <= 0:
+            reject_input(inp, "non-integer number for this type of conversion")
+            exit(0)
         return user_input
 
     print(f"Starting Client...\n\t(Connection Type: {connection_type}){DIVIDER}")
 
+    """ARG NUMBER"""
+    if len(args) != 4:
+        reject_input(args, "Invalid Number of arguments")
+        raise RuntimeError()
+
     """SERVER LOCATION"""
 
-    destination = prompt_server()
-    print(DIVIDER)
+    destination = validate_server(args[0])
 
-    """CLIENT LOCATION"""
+    """CONVERSION INPUT"""
 
-    origin = None
+    inp_type, inp_metric = validate_input(args[2])
 
-    if destination == "localhost":
-        origin = "localhost"
-    else:
-        with (socket(AF_INET, SOCK_DGRAM) as s):
-            s.connect(("8.8.8.8", 80))
-            ip = s.getsockname()[0]
-            origin = ip
+    """CONVERSION OUTPUT"""
 
-    """CONVERSION TYPE"""
+    out_type, _ = validate_input(args[3])
 
-    message_type = prompt_type()
-    print(DIVIDER)
-
-    """CONVERSION DIRECTION"""
-
-    is_metric = prompt_direction(message_type)
-    print(DIVIDER)
+    if inp_type != out_type:
+        reject_input(f"{args[2]}-->{args[3]}", "Unsupported Conversion")
+        raise RuntimeError()
 
     """CONVERSION VALUE"""
 
-    value = prompt_value(message_type, is_metric)
-    print(DIVIDER)
+    value = validate_value(args[1], inp_type == 2)
 
-    message = Message(header=(message_type, is_metric),
-                      origin=origin,
+    message = Message(header=(inp_type+1, inp_metric),
                       destination=destination,
                       content=value)
-
     return message
-
 
 def return_message(request : Message, response : Message) -> None:
     """
@@ -254,9 +165,8 @@ def return_message(request : Message, response : Message) -> None:
 
 def main():
     #TEST FUNCTIONALITY
-    message = create_message("TEST")
+    message = create_message("TEST", ["localhost",120,"C","F"])
     return_message(message, message)
 
 if __name__ == "__main__":
     main()
-

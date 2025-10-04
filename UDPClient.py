@@ -1,21 +1,37 @@
+###################################
+# Name:         UDPClient.py
+# Description:  Implementation of a UDP client.
+#               Client is responsible for prompting user for commands, sending data to server, and relaying data from server to user
+#
+# Author: Xander Palermo <ajp2s@missouristate.edu>
+# Class: CSC565 - Computer Networking
+# Assignment: Socket Programming Assignment 1
+####################################
+
 import pickle
 import socket
 
-from share.ClientFunc import create_message, return_message
+from share.ClientFunction import create_message, return_message
 from share.Message import Message
 
 
-# TODO:
-# THREAD
+
+CLIENT_TIMEOUT_LENGTH = 5
 
 def create_client(m : Message):
+    """
+    Creates a query to a server and logs its reply in terminal.
+        Uses a UDP connection
+    :param m: Message containing all information regarding the query
+    :return: None
+    """
     server_port = 13000
 
     while True:
         print("Opening Socket...")
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as CLIENT_SOCKET:
 
-            CLIENT_SOCKET.settimeout(5)
+            CLIENT_SOCKET.settimeout(CLIENT_TIMEOUT_LENGTH)
             try:
                 CLIENT_SOCKET.sendto(pickle.dumps(m), (m.destination, server_port))
                 modified_message, server_address = CLIENT_SOCKET.recvfrom(2048)
@@ -31,6 +47,10 @@ def create_client(m : Message):
 
 
 def main():
+    """
+    A custom shell used to form queries directed to a server
+    :return: exit(0)
+    """
     while True:
         args = input("(env) $")
 

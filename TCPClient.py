@@ -1,7 +1,17 @@
+###################################
+# Name:         TCPClient.py
+# Description:  Implementation of a TCP client.
+#               Client is responsible for prompting user for commands, sending data to server, and relaying data from server to user
+#
+# Author: Xander Palermo <ajp2s@missouristate.edu>
+# Class: CSC565 - Computer Networking
+# Assignment: Socket Programming Assignment 1
+####################################
+
 import pickle
 import socket
 
-from share.ClientFunc import create_message, return_message
+from share.ClientFunction import create_message, return_message
 from share.Message import Message
 
 
@@ -20,7 +30,9 @@ def create_client(m : Message):
                 CLIENT_SOCKET.send(pickle.dumps(m))
                 modified_message = CLIENT_SOCKET.recv(2048)
                 if modified_message is None:
-                    exit(-1)
+                    print("An error occurred... (nothing received")
+                    break
+                print("Response Received")
                 return_message(m, pickle.loads(modified_message))
                 break
             except (socket.timeout, TimeoutError):
@@ -35,7 +47,6 @@ def create_client(m : Message):
                     continue
                 else:
                     break
-                break
 
 def main():
     while True:
