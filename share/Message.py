@@ -1,6 +1,16 @@
+###################################
+# Name:         Message.py
+# Description:  A Data class that groups information so it can easily be sent between client and server
+#
+# Author: Xander Palermo <ajp2s@missouristate.edu>
+# Class: CSC565 - Computer Networking
+# Assignment: Socket Programming Assignment 1
+####################################
+
 from dataclasses import dataclass
 
 
+# Maps MessageType to units it is converting between (Metric, Imperial)
 
 OPTIONS = {"Exit": None,
                "Distance": ("Kilometers", "Miles"),

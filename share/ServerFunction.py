@@ -1,4 +1,13 @@
-
+###################################
+# Name:         ServerFunction.py
+# Description:  Implementation of all the functionality expected of the server.
+#               Server is responsible for taking in different quantities units of measurements for Distance, Weight, and Temperature
+#                   and convert them between metric and imperial systems
+#
+# Author: Xander Palermo <ajp2s@missouristate.edu>
+# Class: CSC565 - Computer Networking
+# Assignment: Socket Programming Assignment 1
+####################################
 
 from share.Message import Message
 

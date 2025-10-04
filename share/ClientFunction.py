@@ -1,3 +1,15 @@
+###################################
+# Name:         ClientFunction.py
+# Description:  Implementation of all the functionality expected of the client.
+#               Client is responsible for creating queries containing a measurement of distance, weight, or temperature and its units,
+#                   and the units they want the measurement to be converted into.
+#               Client also indicates the location of the server they are contacting
+#
+# Author: Xander Palermo <ajp2s@missouristate.edu>
+# Class: CSC565 - Computer Networking
+# Assignment: Socket Programming Assignment 1
+####################################
+
 import re
 from socket import *
 from decimal import InvalidOperation
