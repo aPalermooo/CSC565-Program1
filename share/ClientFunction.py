@@ -19,10 +19,7 @@ from share.Message import OPTIONS
 
 DIVIDER = '\n' + ('-' * 30) + '\n'
 
-
-
-
-def create_message(connection_type : str) -> Message:
+def create_message(connection_type : str) -> Message | None:
     """
     Prompts user for all information required by server API
 
@@ -127,7 +124,7 @@ def create_message(connection_type : str) -> Message:
             match user_input_dirty:
                 case "0":
                     print("\nTerminating...\n")
-                    exit(0)
+                    return None
                 case "1":
                     user_input = True
                     break
@@ -168,7 +165,7 @@ def create_message(connection_type : str) -> Message:
 
             if user_input_dirty == "e":
                 print("Terminating...")
-                exit(0)
+                return None
 
             try:
                 user_input = float(user_input_dirty)

@@ -16,6 +16,10 @@ OPTIONS = {"Exit": None,
                "Weight": ("Kilograms", "Pounds"),
                "Temperature": ("Celsius", "Fahrenheit")}
 
+SUPPORTED_METRIC = [ "km", "kg", "C"]
+
+SUPPORTED_IMPERIAL = [ "mi", "lb", "F" ]
+
 @dataclass
 class Message:
     """
@@ -35,8 +39,7 @@ class Message:
     2. Request Weight
     3. Request Temperature
     """
-    header: tuple[int,bool]
-    origin: str
+    header: tuple
     destination: str
     content: float
 

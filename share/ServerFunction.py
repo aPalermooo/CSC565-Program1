@@ -76,14 +76,13 @@ def convert(message : Message) -> Message | None:
 
     """ASSEMBLE RESPONSE AND RETURN"""
     return Message(header=(message_type, is_metric),
-                   origin=message.destination,
-                   destination=message.origin,
+                   destination=message.destination,
                    content=value)
 
 
 def main():
     #TEST FUNCTIONALITY
-    print(convert(Message((1, True), "localhost", "localhost", 5)))
+    print(convert(Message((1, True), "localhost", 5)))
 
 if __name__ == "__main__":
     main()

@@ -12,6 +12,7 @@ def main():
         print ("The server is ready to receive")
         while True:
             message, client_address = SERVER_SOCKET.recvfrom(2048)
+            print(f"packet [{message}] received from: {client_address}")
             modified_message = convert(pickle.loads(message))
             SERVER_SOCKET.sendto(pickle.dumps(modified_message), client_address)
 
