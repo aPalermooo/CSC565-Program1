@@ -166,13 +166,13 @@ wants to perform in the first field. The table of this representation is below:
 
 The second field describes if the value contained in the content field is in the metric form of the unit (as in km, kg, or degrees C)
 
-### Destination
+#### Destination
 
 This field is only used by the client. Since the server will always send the message back to the system that sent it. (This field will be unchanged by the server in its modifed version of the message)
 
 It contains the IPv4 address of the server, or "localhost" is the server is located on the same system as the host.
 
-## Content 
+### Content 
 
 This contains a float that represents 1 of 2 things.
 
