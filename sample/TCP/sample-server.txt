@@ -1,0 +1,9 @@
+ajp2s@lovelace:~/CSC565-Program1$ python3 TCPServer.py
+The server is ready to receive
+packet [Message(header=(1, False), destination='localhost', content=459.0)] received from: ('127.0.0.1', 33780)
+packet [Message(header=(2, False), destination='localhost', content=321451.0)] received from: ('127.0.0.1', 43864)
+packet [Message(header=(3, False), destination='localhost', content=212.0)] received from: ('127.0.0.1', 39380)
+packet [Message(header=(1, False), destination='localhost', content=529.0)] received from: ('127.0.0.1', 33772)
+packet [Message(header=(2, False), destination='localhost', content=3000.0)] received from: ('127.0.0.1', 35344)
+packet [Message(header=(3, False), destination='localhost', content=212.0)] received from: ('127.0.0.1', 51402)
+

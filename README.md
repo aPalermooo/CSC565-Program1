@@ -134,6 +134,12 @@ To exit the client, just send the terminate command to the shell
 #### Exit Server
 To exit the server, you must send a manual keyboard interrupt (Ctrl+C) or kill the process using a command such as kill -9
 
+## Sample Output
+
+Sample input and output are contained in the sample directory
+
+These sample inputs and outputs were generated using localhost on the Missouri State University lovelace server
+
 ## Protocol Description
 
 The custom protocol designed to facilitate the data transfer between client and server is contained in the Message.py file in the share folder

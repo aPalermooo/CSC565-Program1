@@ -46,9 +46,10 @@ def temperature(value, is_metric)  -> float:
     :return: value in the opposite unit type ( Metric <--> Imperial )
     """
     if is_metric:
-        return (value * (9 / 5)) + 32
+        return (value * (5 / 9)) + 32
     else:
-        return (value - 32) * (9/5)
+        return (value - 32) * 5/9
+
 
 
 

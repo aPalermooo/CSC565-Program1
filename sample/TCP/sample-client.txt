@@ -1,0 +1,42 @@
+ajp2s@lovelace:~/CSC565-Program1$ python3 TCPClient.py
+(env) $Convert localhost 529 mi km
+Starting Client...
+	(Connection Type: TCP)
+------------------------------
+
+Response Received
+529.0 Miles is equal to 851.1610 Kilometers
+(env) $Convert localhost 3000 lb kg
+Starting Client...
+	(Connection Type: TCP)
+------------------------------
+
+Response Received
+3,000.0 Pounds is equal to 1,360.5442 Kilograms
+(env) $Convert localhost 212 F C
+Starting Client...
+	(Connection Type: TCP)
+------------------------------
+
+Response Received
+212.0°  Fahrenheit is equal to 100.0000°  Celsius
+(env) $Convert 8.8.8.8 100 C F
+Starting Client...
+	(Connection Type: TCP)
+------------------------------
+
+Timed out
+Try again? (y/n) $n
+(env) $Convert localhost 100 C kg
+Starting Client...
+	(Connection Type: TCP)
+------------------------------
+
+
+Input invalid (Unsupported Conversion)
+You entered: C-->kg
+please try again...
+
+------------------------------
+
+(env) $exit

@@ -1,0 +1,34 @@
+ajp2s@lovelace:~/CSC565-Program1$ python3 UDPClient.py
+(env) $Convert localhost 20.5 mi km
+Starting Client...
+	(Connection Type: UDP)
+------------------------------
+
+Opening Socket...
+Response Received
+20.5 Miles is equal to 32.9845 Kilometers
+(env) $Convert localhost 40.33 kg lb
+Starting Client...
+	(Connection Type: UDP)
+------------------------------
+
+Opening Socket...
+Response Received
+40.33 Kilograms is equal to 88.9276 Pounds
+(env) $Convert localhost -23 C F
+Starting Client...
+	(Connection Type: UDP)
+------------------------------
+
+Opening Socket...
+Response Received
+-23.0°  Celsius is equal to -9.4000°  Fahrenheit
+(env) $Convert 8.8.8.8 2 mi km
+Starting Client...
+	(Connection Type: UDP)
+------------------------------
+
+Opening Socket...
+Timed out
+Try again? (y/n) $n
+(env) $exit
